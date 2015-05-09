@@ -1,0 +1,7 @@
+Regarding the third and fourth method, e.g.
+
+Array#select_first( :name => :attribute,
+:interval => { :min => value,
+:max => value2 } )
+
+:name isn't used, right? and it's just there because there needs to be a key value set?
