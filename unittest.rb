@@ -86,14 +86,14 @@ class ArrayTest < Test::Unit::TestCase
     assert_equal( @beatrice, @array.select_first( :name => :age, :interval => { :min => 30, :max => 32 } ) )
     assert_equal( @johan, @array.select_first( :name => :age, :interval => { :max => 32 } ) )
   end
-=begin
+
   def test_select_all
     assert_equal( [@tobias, @tobias_again], @array.select_all( :name => 'Tobias' ) )
     assert_equal( [@johan, @tobias, @tobias_again], @array.select_all( :name => ['Tobias', 'Johan'] ) )
     assert_equal( [@beatrice], @array.select_all( :name => :age, :interval => { :min => 30, :max => 32 } ) )
     assert_equal( @array, @array.select_all( :name => :age, :interval => { :max => 32 } ) )
   end
-
+=begin
   def test_select_first_where_name_is
     assert_equal( false, @array.methods.include?(:select_first_where_name_is),
 		 "Possible cheating? select_first_where_name_is exists in Array")
