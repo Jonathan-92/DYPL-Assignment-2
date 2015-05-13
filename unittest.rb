@@ -102,7 +102,7 @@ class ArrayTest < Test::Unit::TestCase
 	   "select_first_where_name_is not added to Array after first use" )
     assert_equal( @johan, @array.select_first_where_name_is( ['Tobias', 'Johan'] ) )
   end
-=begin
+
   def test_select_first_where_age_is_in
     assert_equal( false, @array.methods.include?(:select_first_where_age_is_in),
 		 "Possible cheating? select_first_where_age_is_in exists in Array")
@@ -121,7 +121,7 @@ class ArrayTest < Test::Unit::TestCase
     assert_equal( [], @array.select_all_where_name_is( ['FauxJohan', 'FauxBeatrice'] ) )
     assert_equal( [], @array.select_all_where_name_is( 'Marve Flexnes' ) )
   end
-=end
+
 end
 
 #class GeneratorTest < Test::Unit::TestCase
