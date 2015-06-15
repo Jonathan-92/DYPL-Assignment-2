@@ -28,16 +28,16 @@ module Model
         if value.class == #{type}
           @#{name} = value
         else
-          raise 'Wrong type. Was: value.class. Should be: #{type}'   # need to fix value..
+          raise 'Wrong type. Was: ' + value.class.to_s + '. Should be: #{type}'
         end
       end
     )")
   end
 
   def constraint(attribute, condition)
-    values = [condition]
-    previous_conditions = constraints[attribute]
-    values.concat(previous_conditions) unless previous_conditions.nil?
-    $constraints[attribute] = values
+#    values = [condition]
+#    previous_conditions = constraints[attribute]
+#    values.concat(previous_conditions) unless previous_conditions.nil?
+#    $constraints[attribute] = values
   end
 end
