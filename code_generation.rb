@@ -33,8 +33,7 @@ module Model
           eval("object.#{k} = v")
         end
         objects << object
-      rescue Exception => ex
-        puts ex
+      rescue #Exception => ex
         next
       end
     end
@@ -44,7 +43,7 @@ module Model
 
   def Model.define_attributes()
     attributes = eval("#{$title}").attributes
-    attributes.each do |name, constraints| 
+    attributes.each do |name, constraints|
       eval("#{$title}").class_eval %(
         def #{name}
           @#{name}
@@ -73,15 +72,12 @@ module Model
   end
 
   def Model.attribute(name, type)
-    #$attributes[name] = ["#{name}.class == #{type}"]
     eval("#{$title}").class_eval %(
-      @@attributes[name] = [name.class == #{type}]
-      puts #{type}
+      @@attributes[name] = ["#{name}.class == #{type}"]
     )
   end
 
   def Model.constraint(attribute, condition)
-    #$attributes[attribute].push(condition)
     eval("#{$title}").class_eval %(
       @@attributes[attribute].push(condition)
     )
