@@ -1,88 +1,73 @@
 class Array
-  def select_first(params)
-    if params.size == 1
-      atr = params.keys[0]
-      values = params.values[0]
-      self.each do |e|
-        list = values
-        if list.is_a?(String)
-          list = list.split()
-        end
-        list.each do |i|
-          if e.instance_variable_get("@#{atr}") == i
-            return e
-          end
-        end
-      end
-    elsif params.size == 2
-      atr = params[:name]
-      min = params[:interval][:min]
-      max = params[:interval][:max]
-
-      self.each do |e|
-        var = e.instance_variable_get("@#{atr}")
-
-        if min != nil
-          if var >= min and var <= max
-            return e
-          end
-        elsif var <= max
-          return e
-        end
-      end
-    end
+  def select_first(args)
+    do_select(args, false)
   end
-
-  def select_all(params)
+  
+  def select_all(args)
+    do_select(args, true)
+  end
+  
+  def do_select(args, select_all)
     result = []
-    if params.size == 1
+    if args.size == 1
       self.each do |e|
-        params.each do |k, v|
-          list = v
-          if v.is_a?(String)
-            list = v.split()
-          end
-          list.each do |i|
+        args.each do |k, v|
+          
+          # This will make sure v is always an Array, 
+          # so that we can iterate over it
+          v = [v].flatten
+          
+          v.each do |i|
             if e.instance_variable_get("@#{k}") == i
-              result.push(e)
+              if select_all
+                result.push(e)
+              else
+                return e
+              end
             end
           end
         end
       end
-    elsif params.size == 2
-      atr = params[:name]
-      min = params[:interval][:min]
-      max = params[:interval][:max]
+    elsif args.size == 2
+      atr_name = args[:name]
+      min = args[:interval][:min]
+      max = args[:interval][:max]
 
       self.each do |e|
-        var = e.instance_variable_get("@#{atr}")
+        atr = e.instance_variable_get("@#{atr_name}")
 
         if min != nil
-          if var >= min and var <= max
-            result.push(e)
+          if atr >= min and atr <= max
+            if select_all
+              result.push(e)
+            else
+              return e
+            end
           end
-        elsif var <= max
-          result.push(e)
+        elsif atr <= max
+          if select_all
+            result.push(e)
+          else
+            return e
+          end
         end
       end
     end
-    return result
+    
+    result
   end
-
+    
   def method_missing(name, *args)
-    if (name =~ /select_(first|all)_where_(.*)_is/)
+    if name =~ /select_(first|all)_where_(.*)_is(?:_in)?/
       atr = $2.to_sym
       Array.class_eval %(
-        def #{name}(params)
-          select_#{$1}(:#{atr} => params)
+        def #{name}(*args)
+          select_#{$1}(:#{atr} => args.flatten)
         end
       )
-      #send(name, args)
-      eval("select_#{$1}(:#{atr} => #{args})")
-      #eval("#{name}(#{args})")
+      send(name, args)
     else
       super
     end
   end
 end
-

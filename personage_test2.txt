@@ -1,0 +1,4 @@
+title  :TestPerson2
+attribute  :asd, String
+attribute  :qwe,  Fixnum
+constraint :qwe,  %(-30 < qwe && qwe < 75)
