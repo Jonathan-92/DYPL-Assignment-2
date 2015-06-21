@@ -1,0 +1,4 @@
+- "Attempts at wrongfully updating an attribute should
+raise a RuntimeError."
+
+även med instance_variable_set?

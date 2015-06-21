@@ -1,5 +1,4 @@
 module Model
-  $attributes = {}
 
   def Model.generate(file_path)
     open(file_path) do |file|
@@ -9,77 +8,77 @@ module Model
     end
 
     define_attributes()
-    load_from_file()
-    eval("#{$title}")
+    define_load_from_file()
+    $class
   end
 
-  def Model.load_from_file()
-    eval("#{$title}.instance_eval %(
+  def Model.define_load_from_file()
+    $class.class_eval %(
       def self.load_from_file(file_name)
-        Model.load(file_name)
+        Model.load_from_file(self, file_name)
       end
-    )")
+    )
   end
 
-  def Model.load(file_name)
+  def Model.load_from_file(the_class, file_name)
     require 'yaml'
     data = YAML.load_file(file_name)['tests']
     objects = []
     
     data.each do |item|
       begin
-        object = eval("#{$title}").new
+        object = the_class.new
+        
         item.each do |k, v|
           eval("object.#{k} = v")
         end
+        
+        the_class.attributes.keys.each do |atr| 
+          raise if not object.instance_variable_defined?("@#{atr}")
+        end
+        
         objects << object
-      rescue #Exception => ex
+      rescue RuntimeError, NoMethodError
         next
       end
     end
     
     objects
   end
-
+  
   def Model.define_attributes()
-    attributes = eval("#{$title}").attributes
-    attributes.each do |name, constraints|
-      eval("#{$title}").class_eval %(
-        def #{name}
-          @#{name}
-        end
+    $class.attributes.each do |name, constraints|
+      $class.class_eval %(
+        attr_reader :#{name}
 
         def #{name}=(#{name})
-          if eval("#{constraints.join(' && ')}")
-            @#{name} = #{name}
-          else
-            raise 'Wrongful update for #{name}, #{name.class}'
+          #{constraints}.each do |e|
+            if not eval(e)
+              raise 'Wrongful update when updating #{name}. Was ' + 
+                  eval("#{name}").to_s + '; should be according to \"' + e + '\"'
+            end
           end
+          @#{name} = #{name}
         end
       )
     end
   end
 
   def Model.title(name)
-    $title = name
     eval("class #{name}
       @@attributes = {}
-      
       def self.attributes
         @@attributes
       end
     end")
+    $class = eval("#{name}")
   end
 
   def Model.attribute(name, type)
-    eval("#{$title}").class_eval %(
-      @@attributes[name] = ["#{name}.class == #{type}"]
-    )
+    $class.attributes[name] = ["#{name}.class == #{type}"]
   end
 
   def Model.constraint(attribute, condition)
-    eval("#{$title}").class_eval %(
-      @@attributes[attribute].push(condition)
-    )
+    $class.attributes[attribute] << condition
   end
 end

@@ -1,17 +1,3 @@
-title = nil
-attributes = {}
-constraints = {}
-
-if line.strip =~ /title\s*(:(?:[A-Z][a-z]*)+)/
-  title = $1
-elsif line.strip =~ /attribute\s*(:[a-z]+(?:_[a-z]+)*),\s*([A-Z][a-z]*)/
-  attributes[$1] = $2
-elsif line.strip =~ /constraint\s*(:[a-z]+(?:_[a-z]+)*),\s*(.+)/
-  values = [$2]
-  values.concat(constraints[$1]) unless constraints[$1].nil?
-  constraints[$1] = values
-end
-
-puts title
-puts attributes
-puts constraints
+#        the_class.attributes.keys.each do |atr|
+#          eval("object.#{atr} = item[atr]")
+#        end

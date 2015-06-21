@@ -1,7 +1,7 @@
 tests:
-   - asd         : Jojje
+   - asd         : nil
      qwe         : 3
-   - name        : Johan
+   - name        : nil
      age         : 26
    - name        : Tobias
      age         : 29
@@ -9,7 +9,7 @@ tests:
      age         : 32
    - name        : FauxBeatrice
      age         : 400
-   - name        : Tobias
+   - rr	         : 4
+     name        : Tobias
      age         : -29
    - name        : Marve Flexnes
-     misc        : Deeeeo
