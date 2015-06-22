@@ -1,62 +1,51 @@
 class Array
   def select_first(args)
-    do_select(args, false)
+    do_select(args) do |e|
+      return e
+    end
   end
   
   def select_all(args)
-    do_select(args, true)
+    result = []
+    do_select(args) do |e|
+      result.push(e)
+    end
+    result
   end
   
-  def do_select(args, select_all)
-    result = []
+  def do_select(args)
     if args.size == 1
+      args = Array(args)[0]
+      atr = args[0]
+      values = Array(args[1])
+      
       self.each do |e|
-        args.each do |k, v|
-          
-          # This will make sure v is always an Array, 
-          # so that we can iterate over it
-          v = [v].flatten
-          
-          v.each do |i|
-            if e.instance_variable_get("@#{k}") == i
-              if select_all
-                result.push(e)
-              else
-                return e
-              end
-            end
+        values.each do |value|
+          if eval("e.#{atr}") == value
+            yield e
           end
         end
       end
+      []  # If no element matching the select criteria were found, return the empty list
     elsif args.size == 2
       atr_name = args[:name]
       min = args[:interval][:min]
       max = args[:interval][:max]
-
+  
       self.each do |e|
-        atr = e.instance_variable_get("@#{atr_name}")
-
+        atr = eval("e.#{atr_name}")
+  
         if min != nil
           if atr >= min and atr <= max
-            if select_all
-              result.push(e)
-            else
-              return e
-            end
-          end
+            yield e
+          end 
         elsif atr <= max
-          if select_all
-            result.push(e)
-          else
-            return e
-          end
+          yield e
         end
       end
     end
-    
-    result
   end
-    
+  
   def method_missing(name, *args)
     if name =~ /select_(first|all)_where_(.*)_is(?:_in)?/
       atr = $2.to_sym

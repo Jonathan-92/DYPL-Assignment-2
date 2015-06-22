@@ -57,9 +57,11 @@ tests:
      age         : 29
    - name        : Beatrice
      age         : 32
+     misc        : 42
    - name        : FauxBeatrice
      age         : 400
    - name        : Tobias
+     err         : ee
      age         : -29
    - name        : Marve Flexnes
      misc        : Deeeeo
@@ -82,6 +84,7 @@ class ArrayTest < Test::Unit::TestCase
 
   def test_select_first
     assert_equal( @tobias, @array.select_first( :name => 'Tobias' ) )
+    assert_equal( [], @array.select_first( :name => 'asdasd' ) )
     assert_equal( @johan, @array.select_first( :name => ['Tobias', 'Johan'] ) )
     assert_equal( @beatrice, @array.select_first( :name => :age, :interval => { :min => 30, :max => 32 } ) )
     assert_equal( @johan, @array.select_first( :name => :age, :interval => { :max => 32 } ) )

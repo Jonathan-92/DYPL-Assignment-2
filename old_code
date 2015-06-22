@@ -1,3 +1,65 @@
-#        the_class.attributes.keys.each do |atr|
-#          eval("object.#{atr} = item[atr]")
+#        item.each do |k, v|
+#          begin
+#            eval("object.#{k} = v")
+#          rescue NoMethodError; end
 #        end
+#        
+#        the_class.attributes.keys.each do |atr| 
+#          raise if not object.instance_variable_defined?("@#{atr}")
+#        end
+
+def do_select(args, select_all)
+    if args.size == 1
+      select_exact(args, select_all)
+    elsif args.size == 2
+      select_from_interval(args, select_all)
+    end
+  end
+  
+  def select_exact(args, select_all)
+    result = []
+    self.each do |e|
+      args = Array(args)[0]
+      atr = args[0]
+      values = Array(args[1])
+      
+      values.each do |value|
+        if e.instance_variable_get("@#{atr}") == value
+          if select_all
+            result.push(e)
+          else
+            return e
+          end
+        end
+      end
+    end
+    result
+  end
+  
+  def select_from_interval(args, select_all)
+    result = []
+    atr_name = args[:name]
+    min = args[:interval][:min]
+    max = args[:interval][:max]
+
+    self.each do |e|
+      atr = e.instance_variable_get("@#{atr_name}")
+
+      if min != nil
+        if atr >= min and atr <= max
+          if select_all
+            result.push(e)
+          else
+            return e
+          end
+        end
+      elsif atr <= max
+        if select_all
+          result.push(e)
+        else
+          return e
+        end
+      end
+    end
+    result
+  end

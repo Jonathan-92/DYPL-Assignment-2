@@ -29,16 +29,12 @@ module Model
       begin
         object = the_class.new
         
-        item.each do |k, v|
-          eval("object.#{k} = v")
+        the_class.attributes.each_key do |atr|
+          eval("object.#{atr} = item[atr.to_s]")
         end
-        
-        the_class.attributes.keys.each do |atr| 
-          raise if not object.instance_variable_defined?("@#{atr}")
-        end
-        
+
         objects << object
-      rescue RuntimeError, NoMethodError
+      rescue RuntimeError
         next
       end
     end
