@@ -7,9 +7,11 @@ class Array
   
   def select_all(args)
     result = []
+      
     do_select(args) do |e|
-      result.push(e)
+      result << e
     end
+    
     result
   end
   
@@ -26,7 +28,7 @@ class Array
           end
         end
       end
-      []  # If no element matching the select criteria were found, return the empty list
+      []  # If no element matches the select criteria, return the empty list
     elsif args.size == 2
       atr_name = args[:name]
       min = args[:interval][:min]
@@ -47,16 +49,26 @@ class Array
   end
   
   def method_missing(name, *args)
-    if name =~ /select_(first|all)_where_(.*)_is(?:_in)?/
-      atr = $2.to_sym
+    if name =~ /select_(first|all)_where_(.*)_is$/
+      atr = $2
       Array.class_eval %(
-        def #{name}(*args)
-          select_#{$1}(:#{atr} => args.flatten)
+        def #{name}(args)
+          select_#{$1}(:#{atr} => args)
         end
       )
-      send(name, args)
+    elsif name =~ /select_(first|all)_where_(.*)_is_in/
+      atr = $2
+      Array.class_eval %(
+        def #{name}(*args)
+          args = args.flatten
+          interval = args.size == 1 ? {:max => args[0]} : [:min,:max].zip(args).to_h
+          select_#{$1}(:name => :#{atr}, :interval => interval)
+        end
+      )
     else
       super
     end
+    
+    send(name, args)
   end
 end

@@ -56,7 +56,7 @@ tests:
    - name        : Tobias
      age         : 29
    - name        : Beatrice
-     age         : 32
+     age         : 31
      misc        : 42
    - name        : FauxBeatrice
      age         : 400
@@ -112,6 +112,8 @@ class ArrayTest < Test::Unit::TestCase
     assert_equal( @beatrice, @array.select_first_where_age_is_in( 30, 32 ) )
     assert(@array.methods.include?(:select_first_where_age_is_in),
 	   "select_first_where_age_is_in not added to Array after first use")
+    assert_equal( @johan, @array.select_first_where_age_is_in( 32 ) )
+    assert_equal( @array, @array.select_all_where_age_is_in( 32 ) )
   end
 
   def test_select_all_where_name_is

@@ -26,17 +26,17 @@ module Model
     objects = []
     
     data.each do |item|
+      object = the_class.new
+      
       begin
-        object = the_class.new
-        
         the_class.attributes.each_key do |atr|
           eval("object.#{atr} = item[atr.to_s]")
         end
-
-        objects << object
       rescue RuntimeError
         next
       end
+      
+      objects << object
     end
     
     objects

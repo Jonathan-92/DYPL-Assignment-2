@@ -3,3 +3,10 @@
 .idea/DYPL-Assignment-2.iml
 *.xml
 *.buildpath
+
+*
+
+!array_extension.rb
+!code_generation.rb
+!unittest.rb
+!assignment_instructions.pdf
