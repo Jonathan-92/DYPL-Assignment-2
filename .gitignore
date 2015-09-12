@@ -6,6 +6,9 @@
 
 *
 
+!.git
+!.idea
+!.gitignore
 !array_extension.rb
 !code_generation.rb
 !unittest.rb
