@@ -3,6 +3,7 @@
 .idea/DYPL-Assignment-2.iml
 *.xml
 *.buildpath
+*.project
 
 *
 
