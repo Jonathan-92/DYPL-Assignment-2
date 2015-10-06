@@ -1,4 +1,9 @@
 ##
+# NOTE: I didn't write this. My teacher supplied this with the assignment.
+# /Jonathan
+##
+
+##
 #  This file contains unittests for the DYPL Ruby assignment. All
 #  assigments handed in must pass these tests or be failed. We
 #  will then scrutinize your code to judge its quality.
